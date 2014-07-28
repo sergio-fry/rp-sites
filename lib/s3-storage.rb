@@ -10,6 +10,7 @@ module CelluloidS3
     include Celluloid::IO
 
     def initialize
+      puts "init aws"
       @s3 = AWS::S3.new({
         :access_key_id => ENV['AWS_ACCESS_KEY_ID'],
         :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY'],
@@ -24,7 +25,7 @@ module CelluloidS3
     end
 
     def read(key)
-      open("http://s3-eu-west-1.amazonaws.com/#{ENV['AWS_BUCKET']}/#{key}").read
+      open("http://s3-eu-west-1.amazonaws.com/#{ENV['AWS_BUCKET']}/#{key}").read rescue nil
     end
 
     def delete(key)
@@ -84,6 +85,7 @@ module CelluloidS3
 
     def initialize
       @cache = Cache.new
+      init_aws
     end
 
     def write(key, value)
@@ -108,6 +110,10 @@ module CelluloidS3
 
     def aws
       @aws ||= Aws.new
+    end
+
+    def init_aws
+      aws
     end
   end
 end

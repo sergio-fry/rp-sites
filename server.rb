@@ -1,10 +1,33 @@
 require 'sinatra/base'
-require "./s3-storage"
+require "s3-storage"
+require "site"
 
 
 class Server < Sinatra::Base
+  class StubStore
+    def initialize
+      @store = {}
+    end
+
+    def write(key, value)
+      @store[key] = value
+    end
+
+    def read(key)
+      @store[key]
+    end
+
+    def delete(key)
+      @store.delete key
+    end
+  end
+
   def initialize(*args)
-    @s3 = CelluloidS3::Storage.new
+    #@connection = CelluloidS3::Storage.new
+    @connection = StubStore.new
+
+    Site.connection(@connection)
+
     super(*args)
   end
 
@@ -12,11 +35,15 @@ class Server < Sinatra::Base
     "Hello World!"
   end
 
-  get '/aws' do
-    @s3.read params[:key]
+  get "/sites/:id" do
+    @site = Site.find params[:id]
+    erb "sites/show".to_sym, :locals => { :site => @site }
   end
 
-  post '/aws' do
-    @s3.write params[:key], params[:value]
+  post "/sites" do
+    @site = Site.new :domain => params[:domain]
+    @site.save
+
+    @site.to_json
   end
 end
