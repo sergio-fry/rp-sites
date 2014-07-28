@@ -1,54 +1,37 @@
 require 'sinatra/base'
 require "s3-storage"
 require "site"
+require "collection"
 
 
 class Server < Sinatra::Base
-  class StubStore
-    def initialize
-    end
-
-    def write(key, value)
-      path = File.join("/tmp/stub-store", key)
-
-      `mkdir -p #{File.dirname(path)}` rescue nil
-
-      File.open( path, "wb") do |f|
-        f.write(value)
-      end
-    end
-
-    def read(key)
-      File.read( File.join("/tmp/stub-store", key))
-    end
-
-    def delete(key)
-      @store.delete key
-    end
-  end
-
   def initialize(*args)
     #@connection = CelluloidS3::Storage.new
-    @connection = StubStore.new
+    @connection = CelluloidS3::StubStorage.new
 
-    Site.connection(@connection)
+    S3Record.connection(@connection)
 
     super(*args)
   end
 
   get '/' do
-    "Hello World!"
+    collection = Collection.root
+    erb "collections/show".to_sym, :locals => { :collection => collection }
   end
 
   get "/sites/:id" do
-    @site = Site.find params[:id]
-    erb "sites/show".to_sym, :locals => { :site => @site }
+    site = Site.find params[:id]
+    erb "sites/show".to_sym, :locals => { :site => site }
   end
 
   post "/sites" do
-    @site = Site.new :domain => params[:domain]
-    @site.save
+    site = Site.new :domain => params[:domain]
+    site.save
 
-    @site.to_json
+    collection = Collection.root
+    collection.add_site(site.id)
+    collection.save
+
+    site.to_json
   end
 end

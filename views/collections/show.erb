@@ -1,0 +1,7 @@
+<h1><%= collection["name"] %></h1>
+
+<ol>
+  <% for site in collection.sites %>
+    <li><a href="/sites/<%= site.id %>"><%= site["domain"] %></a></li>
+  <% end %>
+</ol>

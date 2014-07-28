@@ -116,5 +116,28 @@ module CelluloidS3
       aws
     end
   end
+
+  class StubStorage
+    include Celluloid
+    include Celluloid::IO
+
+    def write(key, value)
+      path = File.join("/tmp/stub-store", key)
+
+      `mkdir -p #{File.dirname(path)}` rescue nil
+
+      File.open( path, "wb") do |f|
+        f.write(value)
+      end
+    end
+
+    def read(key)
+      File.read( File.join("/tmp/stub-store", key))
+    end
+
+    def delete(key)
+      @store.delete key
+    end
+  end
 end
 
