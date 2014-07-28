@@ -81,9 +81,9 @@ class Server < Sinatra::Base
   private
 
   def schedule_tasks
-    scheduler = Rufus::Scheduler.new
+    @scheduler = Rufus::Scheduler.new
 
-    scheduler.every '3d' do
+    @scheduler.every '3d' do
       puts 'Checking alexa rank'
       collection = Collection.root
 
@@ -92,7 +92,7 @@ class Server < Sinatra::Base
       end
     end
 
-    scheduler.every '12h' do
+    @scheduler.every '12h' do
       puts 'Checking sites titles'
       collection = Collection.root
 

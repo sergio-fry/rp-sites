@@ -12,7 +12,6 @@ class SiteWorker
     checked_at = DateTime.parse(site["title_checked_at"]) rescue nil
 
     if checked_at.nil? || checked_at < 3.days.ago
-
       begin
         html = open("http://#{site["domain"]}").read
         detection = CharlockHolmes::EncodingDetector.detect(html)
