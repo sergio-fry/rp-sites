@@ -36,6 +36,10 @@ class S3Record
     @@connection.actors.first
   end
 
+  def connection
+    self.class.connection
+  end
+
   def self.find(id)
     data = connection.read([table_name, id].join("/"))
 

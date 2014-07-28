@@ -7,6 +7,8 @@ require "collection"
 
 
 class Server < Sinatra::Base
+  set :show_exceptions, true
+
   def initialize(*args)
     @connection = CelluloidS3::Storage.supervise
     #@connection = CelluloidS3::StubStorage.supervise

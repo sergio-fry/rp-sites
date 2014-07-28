@@ -6,6 +6,7 @@ gem 'celluloid'
 gem 'celluloid-io'
 
 gem 'sinatra'
+
 gem 'reel-rack'
 
 gem 'aws-sdk'
