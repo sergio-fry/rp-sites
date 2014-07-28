@@ -6,15 +6,20 @@ require "site"
 class Server < Sinatra::Base
   class StubStore
     def initialize
-      @store = {}
     end
 
     def write(key, value)
-      @store[key] = value
+      path = File.join("/tmp/stub-store", key)
+
+      `mkdir -p #{File.dirname(path)}` rescue nil
+
+      File.open( path, "wb") do |f|
+        f.write(value)
+      end
     end
 
     def read(key)
-      @store[key]
+      File.read( File.join("/tmp/stub-store", key))
     end
 
     def delete(key)
