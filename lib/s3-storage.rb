@@ -29,7 +29,7 @@ module CelluloidS3
     end
 
     def delete(key)
-      write(key, "")
+      @bucket.objects.delete(key.to_s)
     end
   end
 
@@ -89,8 +89,10 @@ module CelluloidS3
     end
 
     def write(key, value)
+      @cache.write(key, value)
+
+      # потому что AWS блокирует выполнение
       Thread.new do
-        @cache.write(key, value)
         aws.write(key, value)
       end
     end
@@ -132,11 +134,11 @@ module CelluloidS3
     end
 
     def read(key)
-      File.read( File.join("/tmp/stub-store", key))
+      File.read( File.join("/tmp/stub-store", key)) rescue nil
     end
 
     def delete(key)
-      @store.delete key
+      File.delete( File.join("/tmp/stub-store", key))
     end
   end
 end

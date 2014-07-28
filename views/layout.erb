@@ -1,0 +1,16 @@
+<html lang="ru">
+  <head>
+  </head>
+  <body>
+    <header>Каталог патриотических сайтов</header>
+    <%= yield %>
+
+
+    <% if authorized? %>
+      <script src="/js/vendor/jquery.min.js" type="text/javascript"></script>
+      <script src="/js/vendor/underscore-min.js" type="text/javascript"></script>
+      <script src="/js/vendor/backbone-min.js" type="text/javascript"></script>
+      <script src="/js/admin.js" type="text/javascript"></script>
+    <% end %>
+  </body>
+</html>

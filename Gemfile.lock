@@ -44,5 +44,6 @@ DEPENDENCIES
   aws-sdk
   celluloid
   celluloid-io
+  nokogiri
   reel-rack
   sinatra

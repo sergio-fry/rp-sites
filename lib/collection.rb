@@ -1,5 +1,4 @@
 require 'securerandom'
-require 's3-record'
 
 class Collection < S3Record
   def self.table_name; "collections"; end;

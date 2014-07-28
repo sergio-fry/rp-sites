@@ -7,7 +7,11 @@ class S3Record
   end
 
   def save
-    @@connection.write([self.class.table_name, id].join("/"), to_json)
+    connection.write([self.class.table_name, id].join("/"), to_json)
+  end
+
+  def delete
+    connection.delete([self.class.table_name, id].join("/"))
   end
 
   def to_json
@@ -24,12 +28,16 @@ class S3Record
 
   def self.table_name; raise "Table name undefined"; end;
 
-  def self.connection(connection)
+  def self.connection=(connection)
     @@connection = connection
   end
 
+  def self.connection
+    @@connection.actors.first
+  end
+
   def self.find(id)
-    data = @@connection.read([table_name, id].join("/"))
+    data = connection.read([table_name, id].join("/"))
 
     unless data.nil?
       attributes = JSON.parse(data)["attributes"]
@@ -43,7 +51,7 @@ class S3Record
   end
 
   def self.find_all(ids)
-    ids.map { |id| [id, @@connection.future.read([table_name, id].join("/"))] }.compact.map do |id, future|
+    ids.map { |id| [id, connection.future.read([table_name, id].join("/"))] }.map do |id, future|
       next if future.value.nil?
 
       attributes = JSON.parse(future.value)["attributes"]
@@ -51,6 +59,6 @@ class S3Record
       site.id = id
 
       site
-    end
+    end.compact
   end
 end

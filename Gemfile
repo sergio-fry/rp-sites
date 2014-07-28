@@ -9,5 +9,6 @@ gem 'sinatra'
 gem 'reel-rack'
 
 gem 'aws-sdk'
+gem 'nokogiri'
 
 
