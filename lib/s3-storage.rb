@@ -40,7 +40,7 @@ module CelluloidS3
     class Cache
       include Celluloid
 
-      MAX_CACHE_SIZE = 10
+      MAX_CACHE_SIZE = 1000
 
       def initialize
         @data = {}
