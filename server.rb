@@ -78,6 +78,18 @@ class Server < Sinatra::Base
     "Здравствуйте, админ!"
   end
 
+  get "/admin/run_tasks" do
+    protected!
+
+    collection = Collection.root
+    collection.sites.each do |site|
+      site_worker.async.fetch_title(site.id)
+      site_worker.async.fetch_alexa_rank(site.id)
+    end
+
+    "Started! #{Time.now}"
+  end
+
   private
 
   def schedule_tasks
