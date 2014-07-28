@@ -11,7 +11,7 @@ class Server < Sinatra::Base
     @connection = CelluloidS3::Storage.supervise
     #@connection = CelluloidS3::StubStorage.supervise
 
-    S3Record.connection(@connection)
+    S3Record.connection = @connection
 
     super(*args)
   end
