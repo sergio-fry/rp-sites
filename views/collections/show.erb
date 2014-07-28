@@ -1,7 +1,7 @@
 <h1><%= collection["name"] %></h1>
 
 <ol>
-  <% for site in collection.sites %>
-    <li class="site" data-id="<%= site.id %>"><a href="/sites/<%= site.id %>"><%= site["domain"] %></a> -- <%= site["title"] %></li>
+  <% for site in collection.sites.sort_by { |site| site["alexa_rank"] || 10000000 } %>
+    <li class="site" data-id="<%= site.id %>" data-alexa-rank="<%= site["alexa_rank"] %>"><a href="/sites/<%= site.id %>"><%= site["domain"].sub(/^www\./, "") %></a> <em><%= site["title"] %></em></li>
   <% end %>
 </ol>

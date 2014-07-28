@@ -12,4 +12,9 @@ gem 'reel-rack'
 gem 'aws-sdk'
 gem 'nokogiri'
 
+gem 'charlock_holmes'
+
+gem 'activesupport'
+gem 'rufus-scheduler'
+
 

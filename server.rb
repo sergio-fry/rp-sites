@@ -1,27 +1,29 @@
 require 'sinatra/base'
+require 'active_support/core_ext'
 require "s3-storage"
 require 's3-record'
 require "site"
 require "site_worker"
 require "collection"
 
+require 'rufus-scheduler'
+
 
 class Server < Sinatra::Base
   set :show_exceptions, true
 
   def initialize(*args)
-    @connection = CelluloidS3::Storage.supervise
-    #@connection = CelluloidS3::StubStorage.supervise
+    if ENV["STUB_STORAGE"]
+      @connection = CelluloidS3::StubStorage.supervise
+    else
+      @connection = CelluloidS3::Storage.supervise
+    end
 
     S3Record.connection = @connection
 
-    super(*args)
-  end
+    schedule_tasks
 
-  def site_worker
-    @site_worker_superviser ||= SiteWorker.supervise
-    
-    @site_worker_superviser.actors.first
+    super(*args)
   end
 
   helpers do
@@ -54,6 +56,7 @@ class Server < Sinatra::Base
     site.save
 
     site_worker.async.fetch_title(site.id)
+    site_worker.async.fetch_alexa_rank(site.id)
 
     collection = Collection.root
     collection.add_site(site.id)
@@ -73,5 +76,35 @@ class Server < Sinatra::Base
     protected!
     
     "Здравствуйте, админ!"
+  end
+
+  private
+
+  def schedule_tasks
+    scheduler = Rufus::Scheduler.new
+
+    scheduler.every '3d' do
+      puts 'Checking alexa rank'
+      collection = Collection.root
+
+      collection.sites.each do |site|
+        site_worker.async.fetch_alexa_rank(site.id)
+      end
+    end
+
+    scheduler.every '12h' do
+      puts 'Checking sites titles'
+      collection = Collection.root
+
+      collection.sites.each do |site|
+        site_worker.async.fetch_title(site.id)
+      end
+    end
+  end
+
+  def site_worker
+    @site_worker_superviser ||= SiteWorker.supervise
+    
+    @site_worker_superviser.actors.first
   end
 end
