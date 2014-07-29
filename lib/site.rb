@@ -20,6 +20,8 @@ class Site < S3Record
       14000.0 => 1935.0,
     }
 
+    return points[self[:cy]] if points[self[:cy]].present?
+
     x1 = points.keys.find_all { |k| k <= self[:cy] }.max
     x2 = points.keys.find_all { |k| k >= self[:cy] }.min
 
