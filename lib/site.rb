@@ -28,5 +28,7 @@ class Site < S3Record
     spliner = Spliner::Spliner.new([x1, x2], [points[x1], points[x2]])
 
     rank = spliner[self[:cy]].round
+  rescue
+    5000000
   end
 end
