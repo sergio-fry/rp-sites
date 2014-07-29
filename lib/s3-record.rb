@@ -19,11 +19,11 @@ class S3Record
   end
 
   def [](attr)
-    @attributes[attr]
+    @attributes[attr.to_s]
   end
 
   def []=(attr, value)
-    @attributes[attr] = value
+    @attributes[attr.to_s] = value
   end
 
   def self.table_name; raise "Table name undefined"; end;

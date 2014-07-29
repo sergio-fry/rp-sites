@@ -1,10 +1,11 @@
 require 'sinatra/base'
 require 'active_support/core_ext'
-require "s3-storage"
+require 's3-storage'
 require 's3-record'
-require "site"
-require "site_worker"
-require "collection"
+require 'domain'
+require 'site'
+require 'site_worker'
+require 'collection'
 
 require 'rufus-scheduler'
 
@@ -57,6 +58,7 @@ class Server < Sinatra::Base
 
     site_worker.async.fetch_title(site.id)
     site_worker.async.fetch_alexa_rank(site.id)
+    site_worker.async.fetch_cy(site.id)
 
     collection = Collection.root
     collection.add_site(site.id)
@@ -85,6 +87,7 @@ class Server < Sinatra::Base
     collection.sites.each do |site|
       site_worker.async.fetch_title(site.id)
       site_worker.async.fetch_alexa_rank(site.id)
+      site_worker.async.fetch_cy(site.id)
     end
 
     "Started! #{Time.now}"
@@ -96,11 +99,12 @@ class Server < Sinatra::Base
     @scheduler = Rufus::Scheduler.new
 
     @scheduler.every '3d' do
-      puts 'Checking alexa rank'
+      puts 'Checking ranks'
       collection = Collection.root
 
       collection.sites.each do |site|
         site_worker.async.fetch_alexa_rank(site.id)
+        site_worker.async.fetch_cy(site.id)
       end
     end
 

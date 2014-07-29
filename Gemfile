@@ -16,5 +16,6 @@ gem 'charlock_holmes'
 
 gem 'activesupport'
 gem 'rufus-scheduler'
+gem 'spliner'
 
 
