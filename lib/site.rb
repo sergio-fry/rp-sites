@@ -9,7 +9,9 @@ class Site < S3Record
   })
 
   def alexa_rank_from_cy
-    return if self[:cy].nil?
+    cy = self[:cy]
+    return if cy.nil?
+    cy= cy.to_f
 
     points = {
       0.0 => 10_000_000.0,
@@ -24,14 +26,14 @@ class Site < S3Record
       14000.0 => 1935.0,
     }
 
-    return points[self[:cy]] if points[self[:cy]].present?
+    return points[cy] if points[cy].present?
 
-    x1 = points.keys.find_all { |k| k <= self[:cy] }.max
-    x2 = points.keys.find_all { |k| k >= self[:cy] }.min
+    x1 = points.keys.find_all { |k| k <= cy }.max
+    x2 = points.keys.find_all { |k| k >= cy }.min
 
     spliner = Spliner::Spliner.new([x1, x2], [points[x1], points[x2]])
 
-    rank = spliner[self[:cy]].round
+    rank = spliner[cy].round
   rescue
     10_000_000
   end
