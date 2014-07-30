@@ -4,11 +4,15 @@ require 'spliner'
 class Site < S3Record
   def self.table_name; "sites"; end;
 
+  set_default_attributes({
+    :description_text => ""
+  })
+
   def alexa_rank_from_cy
     return if self[:cy].nil?
 
     points = {
-      0.0 => 5000000.0,
+      0.0 => 10_000_000.0,
       10.0 => 1114440.0,
       100.0 => 145480.0,
       200.0 => 312805.0,
@@ -29,6 +33,6 @@ class Site < S3Record
 
     rank = spliner[self[:cy]].round
   rescue
-    5000000
+    10_000_000
   end
 end

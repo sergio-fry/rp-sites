@@ -1,2 +1,44 @@
-<h1><%= site["domain"] %></h1>
+<style>
+  .site h1 a {
+    color: black; text-decoration: none;
+  }
+  .site .preview {
+    padding-right: 20px;
+    padding-bottom: 10px;
+  }
+  .site .domain{ color: green }
+  div.nl { clear: left }
+</style>
 
+<div class="site">
+  <h1><a href="http://<%= site["title"] || site[:domain] %>" target="_blank"><%= site["domain"] %></a></h1>
+
+  <img src="/img/grey_px.png" align="left" width="350px" height="220px" class="preview" />
+
+  <p class="description">
+  <%= site[:description_text] %>
+  </p>
+
+  <a class="domain" href="http://<%= site[:domain] %>" target="_blank"><%= site["domain"] %></a>
+</div>
+<div class="nl"></div>
+<br />
+<br />
+<br />
+<br />
+
+<div id="hypercomments_widget" style="max-width: 700px"></div>
+<script type="text/javascript">
+_hcwp = window._hcwp || [];
+_hcwp.push({widget:"Stream", widget_id:18390});
+(function() {
+ if("HC_LOAD_INIT" in window)return;
+ HC_LOAD_INIT = true;      
+ var lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage || "en").substr(0, 2).toLowerCase();
+ var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true;
+ hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/18390/"+lang+"/widget.js";
+ var s = document.getElementsByTagName("script")[0]; 
+ s.parentNode.insertBefore(hcc, s.nextSibling);
+ })();
+</script>
+<a href="http://hypercomments.com" class="hc-link" title="comments widget">комментарии на технологии HyperComments</a>

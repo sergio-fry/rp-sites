@@ -1,0 +1,28 @@
+<style>
+form textarea { width: 600px; height: 200px }
+</style>
+
+<h1><%= site["domain"] %></h1>
+
+#ID <%= site.id %>
+
+<form action="/sites/<%= site.id %>" method="POST">
+  <input type="hidden" name="_method" value="PUT" />
+
+  <% for attribute in site.attributes.keys %>
+    <p>
+    <label for="site[<%= attribute %>]"><%= attribute %></label><br/>
+      <% if attribute.match(/_text$/) %>
+        <textarea name="site[<%= attribute %>]" id="site[<%= attribute %>]">
+<%= site[attribute].to_s.gsub('"', '\"') %>
+        </textarea>
+      <% else %>
+        <input type="text" name="site[<%= attribute %>]" id="site[<%= attribute %>]" value="<%= site[attribute].to_s.gsub('"', '\"') %>" />
+      <% end %>
+    </p>
+
+  <% end %>
+
+  <input type="submit" value="Соранить" />
+</form>
+

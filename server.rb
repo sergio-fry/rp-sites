@@ -12,6 +12,8 @@ require 'rufus-scheduler'
 
 class Server < Sinatra::Base
   set :show_exceptions, true
+  set :static, true
+  set :method_override, true
 
   def initialize(*args)
     if ENV["STUB_STORAGE"]
@@ -37,6 +39,19 @@ class Server < Sinatra::Base
     def authorized?
       @auth ||=  Rack::Auth::Basic::Request.new(request.env)
       @auth.provided? and @auth.basic? and @auth.credentials and @auth.credentials == [ENV["BASIC_AUTH_NAME"] || 'admin', ENV["BASIC_AUTH_PASSOWRD"] || 'password']
+    end
+
+    LETTERS = (("а".."я").to_a + [" "] * 10).freeze
+
+    def lorem_ipsum(length=140)
+      text = ""
+
+
+      length.times do 
+        text << LETTERS[rand(LETTERS.size)]
+      end
+
+      text
     end
   end
 
@@ -67,11 +82,29 @@ class Server < Sinatra::Base
     site.to_json
   end
 
+  get "/sites/:id/edit" do
+    protected!
+
+    site = Site.find params[:id]
+    erb "sites/edit".to_sym, :locals => { :site => site }, :layout => :layout
+  end
+
   delete "/sites/:id" do
+    protected!
+
     site = Site.find params[:id]
     site.delete
 
     "#{params[:id]} DELETED"
+  end
+
+  put "/sites/:id" do
+    protected!
+
+    site = Site.find params[:id]
+    site.update(params[:site])
+
+    site.to_json
   end
 
   get "/admin" do

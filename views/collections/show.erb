@@ -1,7 +1,39 @@
-<h1><%= collection["name"] %></h1>
+<style>
+.sites-list .site h2 a {
+  color: black; text-decoration: none;
+}
 
-<ol>
-  <% for site in collection.sites.sort_by { |site| site["alexa_rank"] || site.alexa_rank_from_cy || 10000000 } %>
-    <li class="site" data-id="<%= site.id %>" data-alexa-rank="<%= site["alexa_rank"] %>" data-cy="<%= site[:cy] %>" data-alexa-rank-from-cy="<%= site.alexa_rank_from_cy %>"><a href="/sites/<%= site.id %>"><%= site["domain"].sub(/^www\./, "") %></a> <em><%= site["title"] %></em></li>
+.sites-list .site  {
+  padding-bottom: 50px;
+}
+
+.sites-list .site .preview {
+  padding-right: 20px;
+  padding-bottom: 10px;
+}
+
+.sites-list .site .domain{ color: green }
+
+div.nl { clear: left }
+</style>
+
+<h1><%= collection["name"] %></h1>
+<%= collection[:description_text] %>
+
+<ol class="sites-list">
+  <% for site in collection.sites.sort_by { |site| site["alexa_rank"].try(:to_i) || site.alexa_rank_from_cy.try(:to_i) || 10_000_000 } %>
+    <li class="site" data-id="<%= site.id %>" data-alexa-rank="<%= site["alexa_rank"] %>" data-cy="<%= site[:cy] %>" data-alexa-rank-from-cy="<%= site.alexa_rank_from_cy %>">
+    <h2><a href="/sites/<%= site.id %>"><%= site["title"] || site["domain"].sub(/^www\./, "") %></a></h2>
+
+    <img src="/img/grey_px.png" align="left" width="180px" height="120px" class="preview" />
+
+    <p class="description">
+      <%= site[:description_text] %>
+    </p>
+
+    <a class="domain" href="http://<%= site[:domain] %>" target="_blank"><%= site["domain"] %></a>
+
+    <div class="nl"></div>
+    </li>
   <% end %>
 </ol>

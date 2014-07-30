@@ -1,13 +1,25 @@
 class S3Record
   attr_accessor :id
 
+  class << self; attr_accessor :default_attributes end
+  @default_attributes = {}
+
   def initialize(attributes={})
     @attributes = attributes
     self.id = SecureRandom.uuid
   end
 
+  def attributes
+    self.class.default_attributes.try(:merge, @attributes) || @attributes
+  end
+
   def save
     connection.write([self.class.table_name, id].join("/"), to_json)
+  end
+
+  def update(attributes)
+    @attributes = @attributes.merge(attributes)
+    save
   end
 
   def delete
@@ -19,7 +31,7 @@ class S3Record
   end
 
   def [](attr)
-    @attributes[attr.to_s]
+    attributes[attr.to_s]
   end
 
   def []=(attr, value)
@@ -27,6 +39,12 @@ class S3Record
   end
 
   def self.table_name; raise "Table name undefined"; end;
+
+  def self.set_default_attributes(attributes)
+    self.class_eval do
+      @default_attributes = attributes.stringify_keys
+    end
+  end
 
   def self.connection=(connection)
     @@connection = connection
