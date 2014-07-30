@@ -11,7 +11,7 @@
 </style>
 
 <div class="site" data-id="<%= site.id %>">
-  <h1><a href="http://<%= site[:domain] %>" target="_blank"><%=  site["title"] || site["domain"] %></a></h1>
+  <h1><a href="http://<%= site[:domain] %>" target="_blank"><%=  site["title"].presence || site["domain"] %></a></h1>
 
   <img src="/img/grey_px.png" align="left" width="350px" height="220px" class="preview" />
 
