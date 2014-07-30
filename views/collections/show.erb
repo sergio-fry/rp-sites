@@ -21,7 +21,7 @@ div.nl { clear: left }
 <%= collection[:description_text] %>
 
 <ol class="sites-list">
-  <% for site in collection.sites.sort_by { |site| site["alexa_rank"].try(:to_i) || site.alexa_rank_from_cy.try(:to_i) || 10_000_000 } %>
+  <% for site in collection.sites.sort_by { |site| site["alexa_rank"].presence.try(:to_i) || site.alexa_rank_from_cy.try(:to_i) || 10_000_000 } %>
     <li class="site" data-id="<%= site.id %>" data-alexa-rank="<%= site["alexa_rank"] %>" data-cy="<%= site[:cy] %>" data-alexa-rank-from-cy="<%= site.alexa_rank_from_cy %>">
     <h2><a href="/sites/<%= site.id %>"><%= site["title"] || site["domain"].sub(/^www\./, "") %></a></h2>
 
