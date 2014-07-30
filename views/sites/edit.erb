@@ -13,9 +13,9 @@ form textarea { width: 600px; height: 200px }
     <p>
     <label for="site[<%= attribute %>]"><%= attribute %></label><br/>
       <% if attribute.match(/_text$/) %>
-        <textarea name="site[<%= attribute %>]" id="site[<%= attribute %>]">
+<textarea name="site[<%= attribute %>]" id="site[<%= attribute %>]">
 <%= site[attribute].to_s.gsub('"', '\"') %>
-        </textarea>
+</textarea>
       <% else %>
         <input type="text" name="site[<%= attribute %>]" id="site[<%= attribute %>]" value="<%= site[attribute].to_s.gsub('"', '\"') %>" />
       <% end %>
