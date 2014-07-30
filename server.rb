@@ -1,4 +1,5 @@
 require 'sinatra/base'
+require 'active_support'
 require 'active_support/core_ext'
 require 's3-storage'
 require 's3-record'
