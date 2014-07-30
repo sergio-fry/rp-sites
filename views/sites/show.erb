@@ -10,8 +10,8 @@
   div.nl { clear: left }
 </style>
 
-<div class="site">
-  <h1><a href="http://<%= site["title"] || site[:domain] %>" target="_blank"><%= site["domain"] %></a></h1>
+<div class="site" data-id="<%= site.id %>">
+  <h1><a href="http://<%= site[:domain] %>" target="_blank"><%=  site["title"] || site["domain"] %></a></h1>
 
   <img src="/img/grey_px.png" align="left" width="350px" height="220px" class="preview" />
 
@@ -27,7 +27,7 @@
 <br />
 <br />
 
-<div id="hypercomments_widget" style="max-width: 700px"></div>
+<div id="hypercomments_widget"></div>
 <script type="text/javascript">
 _hcwp = window._hcwp || [];
 _hcwp.push({widget:"Stream", widget_id:18390});
