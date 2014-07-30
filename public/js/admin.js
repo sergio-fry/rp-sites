@@ -15,6 +15,9 @@ $(function() {
       return false;
     });
 
+    var edit_button = $("<a href='/sites/"+id+"/edit'>редактировать</a>");
+
+    site.append(" ", edit_button);
     site.append(" ", button);
   });
 
